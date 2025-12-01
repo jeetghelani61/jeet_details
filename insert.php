@@ -1,29 +1,54 @@
 <?php
 
-include('connect.php');
+//importing dbDetails file
+include 'connect.php';
 
-$name  = $_POST['p_name'] ?? '';
-$price = $_POST['p_price'] ?? '';
-$des   = $_POST['p_des'] ?? '';
+//this is our upload folder
+$upload_path = 'images/';
 
-// Check if any field is empty
-if($name == "" || $price == "" || $des == "")
-{
-    echo json_encode(['code' => 400, 'message' => 'All fields are required']);
-    exit;
-}
+//Getting the server ip
+ $server_ip = gethostbyname(gethostname());
 
-// Insert data
-$sql = "INSERT INTO jeet_products (p_name, p_price, p_des) 
-        VALUES ('$name', '$price', '$des')";
+//creating the upload url
+// $upload_url = $upload_path;
+$upload_url = 'https://'.$_SERVER['SERVER_NAME'] . "/jeet/" . $upload_path;
 
-if(mysqli_query($con, $sql))
-{
-    echo json_encode(['code' => 200, 'message' => 'Product inserted successfully']);
-}
-else
-{
-    echo json_encode(['code' => 500, 'message' => 'Database error', 'error' => mysqli_error($con)]);
-}
+//echo $upload_url;
+
+//getting name from the request
+$pname = $_REQUEST['p_name'];
+$pprice = $_REQUEST['p_price'];
+$pdes = $_REQUEST['p_des'];
+
+
+
+
+//getting file info from the request
+$fileinfo = pathinfo($_FILES["p_img"]["p_name"]);
+
+//getting the file extension
+$extension = $fileinfo["extension"];
+
+$random = 'image_' . rand(1000,9999);
+
+//file url to store in the database
+$file_url = $upload_url . $random . '.' . $extension;
+
+//file path to upload in the server
+$file_path = $upload_path . $random . '.'. $extension;
+
+//saving the file
+move_uploaded_file($_FILES["p_img"]["p_name"],$file_path);
+
+
+
+
+$sql = "INSERT INTO jeet_products(p_name,p_price,p_des,p_img) VALUES ('$pname','$pprice','$pdes','$file_url')";
+//echo $sql;
+//exit;
+$ex=mysqli_query($con,$sql);
+
+//closing the connection
+mysqli_close($con);
 
 ?>
