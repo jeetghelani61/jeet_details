@@ -8,8 +8,9 @@ echo "<li><a href='jeet/insert.php'>Insert Product</a></li>";
 echo "<li><a href='jeet/delete.php'>Delete Products</a></li>";
 echo "<li><a href='jeet/update.php'>Update Products</a></li>";
 echo "<li><a href='jeet/view.php'>View Products</a></li>";
-echo "<li><a href='jeet/upload.php'>upload_image_Products</a></li>";
+
 echo "</ul>";
 ?>
+
 
 
